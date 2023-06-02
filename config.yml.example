@@ -1,0 +1,24 @@
+web:
+  listen: "127.0.0.1:8080" #listen web addr 
+  views_directory: "./views" #Directory of template files used for display.
+
+database:
+  #Now supported database mariadb(mysql)
+  host: "127.0.0.1" #Database host
+  port: 3306 #Database port
+  db_name: "Litebans" #Database name
+  username: "" #Database user
+  password: "" #Database password
+  table_prefix: "Litebans_" #If you set a table prefix in config.yml, set it here as well
+
+settings:
+  lang: JP #{views_directory/lang/{contryname.yml}} countryname
+  show_inactive_bans: true #Show inactive bans? Removed bans will show (Unbanned), mutes will show (Unmuted), warnings will show (Expired).
+  show_silent_bans: true #Show silent bans?
+  timezone: UTC #Ex. Asia/Tokyo 
+  date_format: "YYYY/MM/DD hh:mm:ss" #YYYY = years MM = month DD = day hh = hours mm = minutes ss = seconds 
+  console: #Settings for console users
+    aliases: ["Console", "console"] #The console is identified by the following name
+    name: "console" #This name will be displayed
+    image: "static/img/console.png" #This icon will be used
+  avatar_source: "https://cravatar.eu/avatar/{uuid}/25" #Setting the link to retrieve the avatar
