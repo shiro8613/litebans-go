@@ -3,6 +3,7 @@ package config
 type Config_Web struct {
 	Listen				string 					`yaml:"listen"`
 	ViewsDirectory		string 					`yaml:"views_directory"`
+	Name				string					`yaml:"name"`
 }
 
 type Config_Database struct {

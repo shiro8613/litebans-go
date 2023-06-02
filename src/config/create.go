@@ -12,6 +12,7 @@ func create(path string) error {
 		Web: Config_Web {
 			Listen: "127.0.0.1:8080",
 			ViewsDirectory: "./views",
+			Name: "Litebans",
 		},
 		Database: Config_Database {
 			Host: "127.0.0.1",
