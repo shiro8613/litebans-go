@@ -1,6 +1,7 @@
 web:
   listen: "127.0.0.1:8080" #listen web addr 
   views_directory: "./views" #Directory of template files used for display.
+  name: ""
 
 database:
   #Now supported database mariadb(mysql)
