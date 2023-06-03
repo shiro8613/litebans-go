@@ -8,25 +8,32 @@ import (
 	"github.com/shiro8613/litebans-go/src/config"
 )
 
-func newDatabaseConnection(config config.Config_Database) (DBConnection, error){
+func NewDatabaseConnection(config config.Config_Database) (DBConnection, error){
 	
-	connect := fmt.Sprintf("%s:%s@tmp(%s:%d/%s)", config.Username, config.Password, config.Host, config.Port, config.DBName)
+	connect := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", config.Username, config.Password, config.Host, config.Port, config.DBName)
 	db, err := sqlx.Open("mysql", connect)
 	
 	if err != nil {
 		return DBConnection{}, err
 	}
 
-	defer db.Close()
+	//defer db.Close()
+	sqlText := "SELECT * FROM" 
+
+	bans := fmt.Sprintf("%s %sbans", sqlText, config.TablePrefix)
+	kicks :=  fmt.Sprintf("%s %skicks", sqlText, config.TablePrefix)
+	mutes := fmt.Sprintf(" %s %smutes", sqlText, config.TablePrefix)
+	history := fmt.Sprintf("%s %shistory", sqlText, config.TablePrefix)
+	warning := fmt.Sprintf("%s %swarnings", sqlText, config.TablePrefix)
 
 	return DBConnection{
 		DB: db,
 		SqlConsts: SqlConsts{
-			Bans: fmt.Sprintf("%s_bans", config.TablePrefix),
-			History: fmt.Sprintf("%s_history", config.TablePrefix),
-			Kicks: fmt.Sprintf("%s_kicks", config.TablePrefix),
-			Mutes: fmt.Sprintf("%s_mutes", config.TablePrefix),
-			Warnings: fmt.Sprintf("%s_warnings", config.TablePrefix),
+			Bans: bans,
+			History: history,
+			Kicks: kicks,
+			Mutes: mutes,
+			Warnings: warning,
 		},
 	}, nil
 }
