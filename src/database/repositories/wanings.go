@@ -10,7 +10,7 @@ import (
 type WarningsRepo database.DBConnection
 
 func (rp WarningsRepo) GetAllLimited(limit int, offset int) ([]entites.Warnings, error) {
-	sql := fmt.Sprintf("%s ORDER BY time DESC LIMIT :limit OFFSET :offset", rp.SqlConsts.Warning)
+	sql := fmt.Sprintf("%s ORDER BY time DESC LIMIT :limit OFFSET :offset", rp.SqlConsts.Warnings)
 	rows, err := rp.NamedQuery(sql, map[string]interface{}{"limit": limit, "offset": offset })
 
 	if err != nil {
@@ -35,7 +35,7 @@ func (rp WarningsRepo) GetAllLimited(limit int, offset int) ([]entites.Warnings,
 }
 
 func (rp WarningsRepo) GetById(id int) (entites.Warnings, error) {
-	sql := fmt.Sprintf("%s WHERE id = ? LIMIT 1", rp.SqlConsts.Warning)
+	sql := fmt.Sprintf("%s WHERE id = ? LIMIT 1", rp.SqlConsts.Warnings)
 	row := rp.QueryRowx(sql, id)
 
 	ret := entites.Warnings{}
@@ -49,7 +49,7 @@ func (rp WarningsRepo) GetById(id int) (entites.Warnings, error) {
 } 
 
 func (rp WarningsRepo) GetByUuid(uuid string) ([]entites.Warnings, error) {
-	sql := fmt.Sprintf("%s WHERE uuid = :uuid", rp.SqlConsts.Warning)
+	sql := fmt.Sprintf("%s WHERE uuid = :uuid", rp.SqlConsts.Warnings)
 	rows, err := rp.NamedQuery(sql, map[string]interface{}{"uuid": uuid})
 
 	if err != nil {
