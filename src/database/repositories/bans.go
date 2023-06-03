@@ -7,9 +7,13 @@ import (
 	"github.com/shiro8613/litebans-go/src/database/entites"
 )
 
-type BansRepo database.DBConnection
+type bansRepo database.DBConnection
 
-func (rp BansRepo) GetAllLimited(limit int, offset int) ([]entites.Bans, error) {
+func NewBansRepo(db database.DBConnection) bansRepo {
+	return bansRepo{DB: db.DB, SqlConsts: db.SqlConsts}
+}
+
+func (rp bansRepo) GetAllLimited(limit int, offset int) ([]entites.BansReturn, error) {
 	sql := fmt.Sprintf("%s ORDER BY time DESC LIMIT :limit OFFSET :offset", rp.SqlConsts.Bans)
 	rows, err := rp.NamedQuery(sql, map[string]interface{}{"limit": limit, "offset": offset })
 
@@ -19,36 +23,36 @@ func (rp BansRepo) GetAllLimited(limit int, offset int) ([]entites.Bans, error) 
 
 	defer rows.Close()
 
-	rets := []entites.Bans{}
+	rets := []entites.BansReturn{}
 
 	for rows.Next() {
 		ret := entites.Bans{}
-		err := rows.StructScan(ret)
+		err := rows.StructScan(&ret)
 		if err != nil {
 			return nil, err
 		}
-
-		rets = append(rets, ret)
+	
+		rets = append(rets, Converter[entites.Bans, entites.BansReturn](ret))
 	}
 
 	return rets, nil
 }
 
-func (rp BansRepo) GetById(id int) (entites.Bans, error) {
+func (rp bansRepo) GetById(id int) (entites.BansReturn, error) {
 	sql := fmt.Sprintf("%s WHERE id = ? LIMIT 1", rp.SqlConsts.Bans)
 	row := rp.QueryRowx(sql, id)
 
 	ret := entites.Bans{}
-	err := row.StructScan(ret)
+	err := row.StructScan(&ret)
 
 	if err != nil {
-		return entites.Bans{}, err
+		return entites.BansReturn{}, err
 	}
 
-	return ret, nil
+	return Converter[entites.Bans, entites.BansReturn](ret), nil
 } 
 
-func (rp BansRepo) GetByUuid(uuid string) ([]entites.Bans, error) {
+func (rp bansRepo) GetByUuid(uuid string) ([]entites.BansReturn, error) {
 	sql := fmt.Sprintf("%s WHERE uuid = :uuid", rp.SqlConsts.Bans)
 	rows, err := rp.NamedQuery(sql, map[string]interface{}{"uuid": uuid})
 
@@ -58,16 +62,16 @@ func (rp BansRepo) GetByUuid(uuid string) ([]entites.Bans, error) {
 
 	defer rows.Close()
 
-	rets := []entites.Bans{}
+	rets := []entites.BansReturn{}
 
 	for rows.Next() {
 		ret := entites.Bans{}
-		err := rows.StructScan(ret)
+		err := rows.StructScan(&ret)
 		if err != nil {
 			return nil, err
 		}
 
-		rets = append(rets, ret)
+		rets = append(rets, Converter[entites.Bans, entites.BansReturn](ret))
 	}
 
 	return rets, nil

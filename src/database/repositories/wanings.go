@@ -7,9 +7,13 @@ import (
 	"github.com/shiro8613/litebans-go/src/database/entites"
 )
 
-type WarningsRepo database.DBConnection
+type warningsRepo database.DBConnection
 
-func (rp WarningsRepo) GetAllLimited(limit int, offset int) ([]entites.Warnings, error) {
+func NewWarningsRepo(db database.DBConnection) warningsRepo {
+	return warningsRepo{DB: db.DB, SqlConsts: db.SqlConsts}
+}
+
+func (rp warningsRepo) GetAllLimited(limit int, offset int) ([]entites.WarningsReturn, error) {
 	sql := fmt.Sprintf("%s ORDER BY time DESC LIMIT :limit OFFSET :offset", rp.SqlConsts.Warnings)
 	rows, err := rp.NamedQuery(sql, map[string]interface{}{"limit": limit, "offset": offset })
 
@@ -19,36 +23,36 @@ func (rp WarningsRepo) GetAllLimited(limit int, offset int) ([]entites.Warnings,
 
 	defer rows.Close()
 
-	rets := []entites.Warnings{}
+	rets := []entites.WarningsReturn{}
 
 	for rows.Next() {
 		ret := entites.Warnings{}
-		err := rows.StructScan(ret)
+		err := rows.StructScan(&ret)
 		if err != nil {
 			return nil, err
 		}
 
-		rets = append(rets, ret)
+		rets = append(rets, Converter[entites.Warnings, entites.WarningsReturn](ret))
 	}
 
 	return rets, nil
 }
 
-func (rp WarningsRepo) GetById(id int) (entites.Warnings, error) {
+func (rp warningsRepo) GetById(id int) (entites.WarningsReturn, error) {
 	sql := fmt.Sprintf("%s WHERE id = ? LIMIT 1", rp.SqlConsts.Warnings)
 	row := rp.QueryRowx(sql, id)
 
 	ret := entites.Warnings{}
-	err := row.StructScan(ret)
+	err := row.StructScan(&ret)
 
 	if err != nil {
-		return entites.Warnings{}, err
+		return entites.WarningsReturn{}, err
 	}
 
-	return ret, nil
+	return Converter[entites.Warnings, entites.WarningsReturn](ret), nil
 } 
 
-func (rp WarningsRepo) GetByUuid(uuid string) ([]entites.Warnings, error) {
+func (rp warningsRepo) GetByUuid(uuid string) ([]entites.WarningsReturn, error) {
 	sql := fmt.Sprintf("%s WHERE uuid = :uuid", rp.SqlConsts.Warnings)
 	rows, err := rp.NamedQuery(sql, map[string]interface{}{"uuid": uuid})
 
@@ -58,16 +62,16 @@ func (rp WarningsRepo) GetByUuid(uuid string) ([]entites.Warnings, error) {
 
 	defer rows.Close()
 
-	rets := []entites.Warnings{}
+	rets := []entites.WarningsReturn{}
 
 	for rows.Next() {
 		ret := entites.Warnings{}
-		err := rows.StructScan(ret)
+		err := rows.StructScan(&ret)
 		if err != nil {
 			return nil, err
 		}
 		
-		rets = append(rets, ret)
+		rets = append(rets, Converter[entites.Warnings, entites.WarningsReturn](ret))
 	}
 
 	return rets, nil
