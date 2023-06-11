@@ -13,7 +13,7 @@ database:
   table_prefix: "Litebans_" #If you set a table prefix in config.yml, set it here as well
 
 settings:
-  lang: JP #{views_directory/lang/{contryname.yml}} countryname
+  lang: jp #{views_directory/lang/{contryname.yml}} countryname
   show_inactive_bans: true #Show inactive bans? Removed bans will show (Unbanned), mutes will show (Unmuted), warnings will show (Expired).
   show_silent_bans: true #Show silent bans?
   timezone: UTC #Ex. Asia/Tokyo 

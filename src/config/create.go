@@ -23,7 +23,7 @@ func create(path string) error {
 			TablePrefix: "Litebans_",
 		},
 		Settings: Config_Settings {
-			Lang: "JP",
+			Lang: "jp",
 			ShowInactiveBans: true,
 			ShowSilentBans: true,
 			Timezone: "UTC",
