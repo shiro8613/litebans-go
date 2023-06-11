@@ -18,11 +18,11 @@ func NewDatabaseConnection(config config.Config_Database) (DBConnection, error){
 	}
 
 	//defer db.Close()
+	
 	sqlText := "SELECT * FROM" 
-
 	bans := fmt.Sprintf("%s %sbans", sqlText, config.TablePrefix)
 	kicks :=  fmt.Sprintf("%s %skicks", sqlText, config.TablePrefix)
-	mutes := fmt.Sprintf(" %s %smutes", sqlText, config.TablePrefix)
+	mutes := fmt.Sprintf("%s %smutes", sqlText, config.TablePrefix)
 	history := fmt.Sprintf("%s %shistory", sqlText, config.TablePrefix)
 	warning := fmt.Sprintf("%s %swarnings", sqlText, config.TablePrefix)
 

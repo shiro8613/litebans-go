@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/shiro8613/litebans-go/src/database"
 	"github.com/shiro8613/litebans-go/src/database/entites"
@@ -75,4 +76,18 @@ func (rp bansRepo) GetByUuid(uuid string) ([]entites.BansReturn, error) {
 	}
 
 	return rets, nil
+} 
+
+func (rp bansRepo) GetCount() (int, error) {
+	sql := strings.Replace(rp.SqlConsts.Bans, "SELECT * FROM", "SELECT COUNT( id ) FROM", -1)
+	row := rp.QueryRowx(sql)
+
+	var ret int
+	err := row.Scan(&ret)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return ret, nil
 } 
